@@ -34,6 +34,7 @@ import '@/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css';
 
 import 'vue-multiselect/dist/vue-multiselect.css'
 
+
 // JS
 import '@/adminlte/plugins/jquery/jquery.min.js';
 import '@/adminlte/plugins/jquery-ui/jquery-ui.min.js';

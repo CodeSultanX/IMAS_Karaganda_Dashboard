@@ -16,7 +16,8 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [   
-            'title' => $this->title,
+            'id' => $this->id,
+            'name' => $this->name,
             'f_date' => (new \DateTime($this->f_date))->format('Y-m-d'),
             's_date' => (new \DateTime($this->s_date))->format('Y-m-d'),
         ];

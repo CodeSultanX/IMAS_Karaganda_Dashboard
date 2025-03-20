@@ -23,10 +23,8 @@
                             <td>{{ project.f_date }}</td>
                             <td>{{ project.s_date }}</td>
                             <td>
-                                <a href="" class="btn btn-outline-primary">Редактировать</a>
-                                <form action="" method="post">
-                                <button type="submit" onclick="return confirm('Действительно хотите удалить страницу?')" class="btn btn-outline-danger">Удалить</button>
-                                </form>
+                                <button type="button" @click="show(project)" class="btn btn-outline-primary">Редактировать</button>
+                                <button type="button" @click="deleteAction(project.id)"  class="btn btn-outline-danger">Удалить</button>
                             </td>
                         </tr>
                 </tbody>
@@ -50,8 +48,13 @@
                                             <label for="title">Найменование</label>
                                             <input type="text" class="form-control" v-model="form.title" id="title">
                                         </div>
-
-                                       
+                                        <date-range-picker
+                                            ref="picker"
+                                            :opens="'left'"
+                                            :dateRange="dateRange"
+                                            v-model="dateRange"
+                                        />
+                                      
                                         <div class="form-group">
                                             <button type="submit" :disabled="!form.title" class="btn btn-primary">Добавить</button>
                                             <button type="button"  @click="openModal = false" class="btn btn-white">Закрыть</button>
@@ -62,31 +65,43 @@
                         </form>
                     </div>
                 </div>
-            </div>
-
-            <!-- Edit Problem Modal -->
-            <div v-if="editModal" class="modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-green-300">
-                            <h5 class="modal-title">Редактировать проблемный вопрос</h5>
-                            <button class="close" @click="editModal = false"> <span aria-hidden="true">&times;</span></button>
-                        </div>
-                        <form @submit.prevent="updateForm">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="title">Найменование</label>
-                                    <input type="text" class="form-control" v-model="form.title" id="title">
+          </div>
+          <!-- Edit Modal -->
+          <div v-if="editModal" class="modal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal inmodal " >
+                        <form class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-green-300">
+                                    <h4 class="modal-title">Редактировать проект</h4>
+                                    <button type="button" @click="editModal = false"><span aria-hidden="true">&times;</span></button> 
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button :disabled="!form.name" type="submit" class="btn btn-primary">Обновить</button>
-                                <button type="button" class="btn btn-secondary"  @click="editModal = false">Закрыть</button>
+                                <div class="modal-body">
+                                    <form @submit.prevent="updateAction">
+                                        <div class="form-group">
+                                            <label for="title">Найменование</label>
+                                            <input type="text" class="form-control" v-model="EditForm.title" id="title">
+                                        </div>
+                                        <date-range-picker
+                                            ref="picker"
+                                            :opens="'left'"
+                                            :dateRange="dateRange"
+                                            v-model="dateRange"
+                                        />
+                                      
+                                        <div class="form-group">
+                                            <button type="submit" :disabled="!EditForm.title" class="btn btn-primary">Обновить</button>
+                                            <button type="button"  @click="editModal = false" class="btn btn-white">Закрыть</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
+          </div>
+
+           
 
         
     </AdminLayout>
@@ -94,20 +109,31 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import DateRangePicker from 'vue3-daterange-picker';
 import { Head, Link, useForm,usePage } from '@inertiajs/vue3';
-import {createProject,getProjects} from '@/Use/api/projects';
+import {createProject,getProjects,updateProject,deleteProject} from '@/Use/api/projects';
 import {projects} from '@/Use/data/items';
 
 export default {
     name:'Index',
-    components: {AdminLayout,Head,Link},
+    components: {AdminLayout,Head,Link,DateRangePicker},
 
     data(){
         return {
+            dateRange : {
+                startDate: new Date().toISOString().split('T')[0],  // Получаем YYYY-MM-DD
+                endDate: new Date().toISOString().split('T')[0],
+            },
             form : useForm({
                     title: '',
-                    f_date: new Date().toISOString().split('T')[0],  // Получаем YYYY-MM-DD
-                    s_date: new Date().toISOString().split('T')[0],
+                    startDate: '',  
+                    endDate: '',
+            }),
+            EditForm : useForm({
+                    id: '',
+                    title: '',
+                    startDate: '',  
+                    endDate: '',
             }),
             user_id : usePage().props.auth.user.id,
             openModal:false,
@@ -117,8 +143,29 @@ export default {
 
     methods: {
          storeAction() {
+            this.form.startDate = this.dateRange.startDate;
+            this.form.endDate = this.dateRange.endDate;
             createProject(this.form,this.user_id);
             this.openModal = false;
+        },
+         updateAction() {
+            updateProject(this.EditForm,this.user_id);
+            this.editModal = false;
+        },
+        
+        show(project){
+            this.editModal  = true;
+            this.EditForm.id = project.id;
+            this.EditForm.title = project.name;
+            this.dateRange.startDate = project.f_date;
+            this.dateRange.endDate = project.s_date;
+
+            this.EditForm.startDate = project.f_date;
+            this.EditForm.endDate = project.s_date;
+
+        },
+        deleteAction(id){ 
+            deleteProject(id,this.user_id)
         },
 
     },
