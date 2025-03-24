@@ -14,3 +14,6 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('regions',RegionController::class);
 Route::apiResource('projects',ProjectController::class);
 Route::apiResource('problems',ProblemController::class);
+
+
+Route::put('/problems/updateVisible/{problem}',[ProblemController::class,'updateVisible']);

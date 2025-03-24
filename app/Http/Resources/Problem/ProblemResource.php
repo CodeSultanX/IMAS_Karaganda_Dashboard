@@ -17,16 +17,16 @@ class ProblemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'title' => $this->title,
             'color' => $this->color,
             'level' => $this->level,
             'project_id' => $this->project_id,
-            'username' => $this->results->pluck('username'),
+            'username' => $this->results->pluck('user.name')->implode(''),
             'is_visible' => $this->is_visible,
-            'result' => $this->results->pluck('result')->implode(', '),
-            'status' => $this->results->pluck('status')->implode(', '),
-            'images' => $this->images->pluck('image'),
-            'cities' => $this->cities->pluck('name')->implode(', '),
+            'result' => $this->results->pluck('result')->implode(''),
+            'status' => $this->results->pluck('status')->implode(''),
+            'images' => $this->images->pluck('url_image'),
+            'regions' => $this->regions->pluck('title')->implode(', '),
             'created_at' => (new DateTime(($this->created_at)))->format('Y-m-d'),
         ];
     }

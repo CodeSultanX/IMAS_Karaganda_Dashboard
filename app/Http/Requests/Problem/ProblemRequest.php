@@ -23,13 +23,14 @@ class ProblemRequest extends FormRequest
     {
         return [
            'title' => 'required|string',
-           'color' => 'required|string',
+           'result' => 'required|string',
+           'status' => 'required|string',
            'level' => 'required|string',
+           'color' => 'required|string',
            'project_id' => 'required|integer',
            'regions' => 'required|array',
-           'images' => 'required|array',
-           'status' => 'required|string',
-           'result' => 'required|string',
+           'images' => 'nullable|array',
+           'user_id' => 'nullable|integer',
         ];
     }
 }

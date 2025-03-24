@@ -13,7 +13,7 @@ class Problem extends Model
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        "name",
+        "title",
         "result",
         "status",
         "level",
@@ -23,7 +23,7 @@ class Problem extends Model
 
     public static function getAdminPageProblems()
     {
-        return self::with(['images', 'results.user', 'cities'])->get();
+        return self::with(['images', 'results.user', 'regions'])->get();
     }
 
     public function images(): HasMany
@@ -38,6 +38,6 @@ class Problem extends Model
 
     public function regions(): BelongsToMany
     {
-        return $this->belongsToMany(Region::class, 'problem_maps', 'problem_id', 'city_id');
+        return $this->belongsToMany(Region::class, 'problem_maps', 'problem_id', 'region_id');
     }
 }
