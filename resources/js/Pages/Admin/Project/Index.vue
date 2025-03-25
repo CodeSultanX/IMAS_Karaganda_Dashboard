@@ -50,7 +50,7 @@
                                         </div>
                                         <date-range-picker
                                             ref="picker"
-                                            :opens="'left'"
+                                            :opens="'right'"
                                             :dateRange="dateRange"
                                             v-model="dateRange"
                                         />
@@ -84,7 +84,7 @@
                                         </div>
                                         <date-range-picker
                                             ref="picker"
-                                            :opens="'left'"
+                                            :opens="'right'"
                                             :dateRange="dateRange"
                                             v-model="dateRange"
                                         />

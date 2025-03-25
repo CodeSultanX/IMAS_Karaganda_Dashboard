@@ -4,7 +4,67 @@
         <div>
             <h1 class="text-center">Проблемные вопросы</h1>
             <button @click="openModal = true" class="btn btn-success ml-3">Добавить проблемный вопрос</button>
-
+            <h5 class="p-3">
+                Фильтр
+                <i class="fa fa-filter" @click="this.showFillter = this.showFillter ? false : true" style="padding: 5px; cursor:pointer"></i>
+            </h5>
+            <div class="filter-panel">
+                <div v-if="showFillter">
+                    <div class="form-group">
+                        <label for="show_dashboard">Показывать в dashboard</label>
+                        <select class="form-control" id="show_dashboard" v-model="fillter.visible">
+                            <option value="" selected disabled >Выберите значение</option>
+                            <option value="1">Да</option>
+                            <option value="0">Нет</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Период</label>
+                        <div>
+                            <date-range-picker
+                                    ref="picker"
+                                    :opens="'right'"
+                                    :dateRange="dateRange"
+                                    v-model="dateRange"
+                        />
+                        </div>
+                        
+                    </div>
+                    <div class="form-group">
+                        <label class="typo__label">Регионы</label>
+                            <multiselect id="option-groups" 
+                                v-model="fillter.value_regions" 
+                                :options="regions"
+                                :multiple="true"
+                                track-by="id"
+                                label="title"
+                                placeholder="Выберите регион"
+                                >
+                                
+                                <template v-slot:noResult>Ничего не найден</template>
+                            </multiselect>
+                    </div>
+                    <div class="form-group">
+                        <label for="levels">Уровни/направления</label>
+                        <multiselect id="option-groups" 
+                            v-model="fillter.value_levels" 
+                            :options="levels"
+                            :multiple="true"
+                            track-by="value"
+                            label="title"
+                            placeholder="Выберите уровень/направление..."
+                            >
+                            
+                            <template v-slot:noResult>Ничего не найден</template>
+                        </multiselect>
+                    
+                    </div>
+                    <div class="filter-actions text-right">
+                        <button class="btn btn-success mr-3" @click="filter_page()">Применить</button>
+                        <button class="btn btn-secondary" @click="remove_filter_page()">Сбросить</button>
+                    </div>
+                </div>
+            </div>
             <div class="table-responsive" style="max-height: 700px; overflow-y: auto; margin-top: 15px;">
 
                 <table class="table table-striped">
@@ -50,6 +110,7 @@
                             <div class="modal-content">
                                 <div class="modal-header bg-green-300">
                                     <h4 class="modal-title">Добавить проблемный вопрос</h4>
+                                  
                                     <button type="button" @click="openModal = false"><span aria-hidden="true">&times;</span></button> 
                                 </div>
                                 <div class="modal-body">
@@ -214,7 +275,7 @@
                                 <div class="form-group">
                                     <button type="submit" :disabled="!editForm.title || !editForm.status || !editForm.result || !editForm.value_regions ||
                                                                         !editForm.level || !editForm.color || !editForm.project_id" class="btn btn-primary">Обновить</button>
-                                    <button type="button"  @click="openModal = false" class="btn btn-white">Закрыть</button>
+                                    <button type="button"  @click="editModal = false" class="btn btn-white">Закрыть</button>
                                 </div>
                             </form>
                         </div>
@@ -228,6 +289,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import DateRangePicker from 'vue3-daterange-picker';
 import vueDropzone from 'vue2-dropzone-vue3'
 import { Head, Link, useForm,usePage } from '@inertiajs/vue3';
 import Multiselect from 'vue-multiselect'
@@ -238,10 +300,21 @@ import {projects,regions,problems} from '@/Use/data/items';
 
 export default {
     name:'Index',
-    components: {AdminLayout,Head,Link,Multiselect,vueDropzone},
+    components: {AdminLayout,Head,Link,Multiselect,vueDropzone,DateRangePicker},
 
     data(){
         return {
+            dateRange : {
+                startDate: new Date().toISOString().split('T')[0],  // Получаем YYYY-MM-DD
+                endDate: new Date().toISOString().split('T')[0],
+            },
+            fillter: {
+                startDate: '',  
+                endDate: '',
+                visible:'',
+                value_levels:[],
+                value_regions:[]
+            },
             form : useForm({
                     title: '',
                     status : '',
@@ -266,6 +339,7 @@ export default {
             user_id : usePage().props.auth.user.id,
             dropzone: null,
             openModal:false,
+            showFillter:false,
             editModal:false,
             dropzoneOptions: {
                 url: 'https://httpbin.org/post',
@@ -275,7 +349,45 @@ export default {
                 addRemoveLinks: true,
                 dictDefaultMessage: "Перетащите файлы сюда или нажмите для загрузки",
                 acceptedFiles : 'image/jpeg, image/png, image/jpg'
-            }
+            },
+            levels: [
+                {
+                    value: "republic",
+                    title: 'Республиканский уровень'
+                },
+                {
+                    value: "obl",
+                    title: 'Областной уровень'
+                },
+                {
+                    value: "city",
+                    title: 'Городской уровень'
+                },
+                {
+                    value: "1",
+                    title: 'Системообразующие предприятия'
+                },
+                {
+                    value: "2",
+                    title: 'Проблемные ЖК (дольщики)'
+                },
+                {
+                    value: "3",
+                    title: 'Проблемы в сфере ЖКХ и автодорог'
+                },
+                {
+                    value: "4",
+                    title: 'Другие социальные проблемы'
+                },
+                {
+                    value: "5",
+                    title: 'Экологические проблемы'
+                },
+                {
+                    value: "6",
+                    title: 'Проблемы в сельскохозяйственном направлении'
+                },
+            ]
         }
     },
 
@@ -345,6 +457,7 @@ export default {
             problem.is_visible = problem.is_visible == 0 ? 1 : 0;
             updateProblemVisible(problem.id,problem.is_visible)
         },
+       
     },
 
     setup(){return {projects,regions,problems}},
@@ -382,6 +495,10 @@ export default {
 }
 .yellow{
     background-color: #f0e732 !important;
+}
+.filter-panel{
+    padding: 15px;
+    width: 60%;
 }
 
 </style>
