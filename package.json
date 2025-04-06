@@ -21,7 +21,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "save": "^2.9.0",
+        "bootstrap-daterangepicker": "^3.1.0",
         "vue-multiselect": "^3.2.0",
         "vue2-dropzone-vue3": "^1.1.0",
         "vue3-daterange-picker": "^1.0.1"

@@ -10,6 +10,30 @@ export function getProblems(){
     })
     .catch(error => console.error("Ошибка при получений проблемных вопросов:", error));
 }
+export function fillterProblems(data){
+    const levels = data.value_levels.map(l => l.value).join(',');
+    const regions = data.value_regions.map(r => r.id).join(',');
+    const visible = data.visible;
+    const f_date = new Date(data.startDate).toISOString().split('T')[0];
+    const s_date = new Date(data.endDate).toISOString().split('T')[0];
+
+    const query = new URLSearchParams({
+        levels : levels,
+        regions : regions,
+        visible : visible,
+        f_date : f_date,
+        s_date : s_date,
+    }).toString();
+
+    fetch(`/api/problems/search?${query}`, {
+        method: "GET",
+    })
+    .then(response => response.json())
+    .then(res => {
+        problems.value = res;
+    })
+    .catch(error => console.error("Ошибка при получений проблемных вопросов:", error));
+}
 export function deleteProblem(problem){
     fetch(`/api/problems/${problem}`, {
         method: "DELETE",

@@ -13,7 +13,11 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('regions',RegionController::class);
 Route::apiResource('projects',ProjectController::class);
-Route::apiResource('problems',ProblemController::class);
-
+Route::apiResource('problems',ProblemController::class)->only([
+    'index','store','update','destroy'
+]);
 
 Route::put('/problems/updateVisible/{problem}',[ProblemController::class,'updateVisible']);
+Route::get('/problems/search',[ProblemController::class,'search']);
+
+

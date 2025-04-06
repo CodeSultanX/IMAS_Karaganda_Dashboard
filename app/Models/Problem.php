@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use App\Models\ProblemResult;
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Problem extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,Filterable;
 
     protected $fillable = [
         "title",
@@ -24,6 +25,10 @@ class Problem extends Model
     public static function getAdminPageProblems()
     {
         return self::with(['images', 'results.user', 'regions'])->get();
+    }
+    public static function getAdminPageProblemsWithIds($ids)
+    {
+        return self::with(['images', 'results.user', 'regions'])->whereIn('id',$ids)->get();
     }
 
     public function images(): HasMany

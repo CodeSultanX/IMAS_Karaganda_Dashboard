@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Fillters\ProblemFillter;
+use App\Http\Requests\Problem\FillterRequest;
 use App\Http\Requests\Problem\ProblemRequest;
 use App\Http\Resources\Problem\ProblemResource;
 use App\Models\Problem;
@@ -77,7 +79,8 @@ class ProblemController extends Controller
 
     }
 
-    public function update(Problem $problem,ProblemRequest $request){
+    public function update(Problem $problem,ProblemRequest $request)
+    {
         try {
             $data = $request->validated();
             $problem->update([
@@ -153,4 +156,18 @@ class ProblemController extends Controller
             return response()->json(['message' => 'Error updatting visible'],500);
         }
     }
+
+    public function search(ProblemFillter $filter) : JsonResponse
+    {
+        try {
+           $problemIds = Problem::filter($filter)->pluck('id');
+           $data = Problem::getAdminPageProblemsWithIds($problemIds);
+           return response()->json(ProblemResource::collection($data),200);
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error : '. $th->getMessage()],500);
+        }
+       
+    }
+   
 }

@@ -74,14 +74,14 @@ table {
     --cart-kz-filter:drop-shadow(0px 0px 15px #182942);;
 
     /* Sizes */
-    --header-and-footer-titles: 3.6rem;; /* 36px */
-    --current-time-header-fz: 2.4rem;; /* 24px */
-    --cart-city-title-fz: 2.4rem; /* 24px */
-    --cart-titles-fz: 2rem;; /* 20px */
-    --count-items-fz: 1.6rem;; /* 16px */
-    --socention-items-fz: 1.4rem;; /* 14px */
-    --list-problems-items-fz: 1.2rem;; /* 12px */
-    --block-colors-fz: 1rem;; /* 10px */
+    --header-and-footer-titles: 2.3rem; /* 36px */
+    --current-time-header-fz: 2.4rem; /* 24px */
+    --cart-city-title-fz: 2.1rem; /* 24px */
+    --cart-titles-fz: 1.4rem; /* 20px */
+    --count-items-fz: 1rem; /* 16px */
+    --socention-items-fz: 0.9rem; /* 14px */
+    --list-problems-items-fz: 0.95rem; /* 12px */
+    --block-colors-fz: 1rem; /* 10px */
     --diagramm-items-fz: 1rem;
 
 	--calendar1-width:20rem;

@@ -6,63 +6,64 @@
             <button @click="openModal = true" class="btn btn-success ml-3">Добавить проблемный вопрос</button>
             <h5 class="p-3">
                 Фильтр
-                <i class="fa fa-filter" @click="this.showFillter = this.showFillter ? false : true" style="padding: 5px; cursor:pointer"></i>
+                <i class="fa fa-filter" @click="this.showFillter = this.showFillter ? false : true;" style="padding: 5px; cursor:pointer"></i>
             </h5>
             <div class="filter-panel">
                 <div v-if="showFillter">
-                    <div class="form-group">
-                        <label for="show_dashboard">Показывать в dashboard</label>
-                        <select class="form-control" id="show_dashboard" v-model="fillter.visible">
-                            <option value="" selected disabled >Выберите значение</option>
-                            <option value="1">Да</option>
-                            <option value="0">Нет</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Период</label>
-                        <div>
-                            <date-range-picker
-                                    ref="picker"
-                                    :opens="'right'"
-                                    :dateRange="dateRange"
-                                    v-model="dateRange"
-                        />
+                    <form @submit.prevent="filterAction">
+                        <div class="form-group">
+                            <label for="show_dashboard">Показывать в dashboard</label>
+                            <select class="form-control" id="show_dashboard" v-model="fillter.visible">
+                                <option value="" selected disabled >Выберите значение</option>
+                                <option value="1">Да</option>
+                                <option value="0">Нет</option>
+                            </select>
                         </div>
-                        
-                    </div>
-                    <div class="form-group">
-                        <label class="typo__label">Регионы</label>
+                        <div class="form-group">
+                            <label>Период</label>
+                            <div>
+                                <date-range-picker
+                                        ref="picker"
+                                        :opens="'right'"
+                                        :dateRange="dateRange"
+                                        v-model="dateRange"
+                            />
+                            </div>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label class="typo__label">Регионы</label>
+                                <multiselect id="option-groups" 
+                                    v-model="fillter.value_regions" 
+                                    :options="regions"
+                                    :multiple="true"
+                                    track-by="id"
+                                    label="title"
+                                    placeholder="Выберите регион"
+                                    >
+                                    
+                                    <template v-slot:noResult>Ничего не найден</template>
+                                </multiselect>
+                        </div>
+                        <div class="form-group">
+                            <label for="levels">Уровни/направления</label>
                             <multiselect id="option-groups" 
-                                v-model="fillter.value_regions" 
-                                :options="regions"
+                                v-model="fillter.value_levels" 
+                                :options="levels"
                                 :multiple="true"
-                                track-by="id"
+                                track-by="value"
                                 label="title"
-                                placeholder="Выберите регион"
+                                placeholder="Выберите уровень/направление..."
                                 >
-                                
                                 <template v-slot:noResult>Ничего не найден</template>
                             </multiselect>
-                    </div>
-                    <div class="form-group">
-                        <label for="levels">Уровни/направления</label>
-                        <multiselect id="option-groups" 
-                            v-model="fillter.value_levels" 
-                            :options="levels"
-                            :multiple="true"
-                            track-by="value"
-                            label="title"
-                            placeholder="Выберите уровень/направление..."
-                            >
-                            
-                            <template v-slot:noResult>Ничего не найден</template>
-                        </multiselect>
-                    
-                    </div>
-                    <div class="filter-actions text-right">
-                        <button class="btn btn-success mr-3" @click="filter_page()">Применить</button>
-                        <button class="btn btn-secondary" @click="remove_filter_page()">Сбросить</button>
-                    </div>
+                        </div>
+                        <div class="filter-actions text-right">
+                            <button type="submit" class="btn btn-success mr-3">Применить</button>
+                            <button type="button" class="btn btn-secondary" @click="remove_filter_page()">Сбросить</button>
+                        </div>
+                    </form>
+                  
                 </div>
             </div>
             <div class="table-responsive" style="max-height: 700px; overflow-y: auto; margin-top: 15px;">
@@ -293,7 +294,7 @@ import DateRangePicker from 'vue3-daterange-picker';
 import vueDropzone from 'vue2-dropzone-vue3'
 import { Head, Link, useForm,usePage } from '@inertiajs/vue3';
 import Multiselect from 'vue-multiselect'
-import {createProblem,getProblems,udpateProblem,updateProblemVisible,deleteProblem} from '@/Use/api/problems';
+import {createProblem,getProblems,udpateProblem,updateProblemVisible,deleteProblem,fillterProblems} from '@/Use/api/problems';
 import {getRegions} from '@/Use/api/regions';
 import { getProjects } from '@/Use/api/projects';
 import {projects,regions,problems} from '@/Use/data/items';
@@ -404,6 +405,17 @@ export default {
             deleteProblem(id)
         },
 
+        filterAction(){
+            this.fillter.startDate = this.dateRange.startDate;
+            this.fillter.endDate = this.dateRange.endDate;
+            fillterProblems(this.fillter);
+        },
+
+        remove_filter_page(){
+            this.fillter.visible = '';
+            getProblems();
+        },
+
         fileAdded(file){this.form.images.push(file) },
         removedFile(file){this.form.images = this.form.images.filter(f => f !== file);},
         editFileAdded(file){this.editForm.images.push(file)},
@@ -457,6 +469,7 @@ export default {
             problem.is_visible = problem.is_visible == 0 ? 1 : 0;
             updateProblemVisible(problem.id,problem.is_visible)
         },
+      
        
     },
 
@@ -466,6 +479,8 @@ export default {
         getProjects(this.user_id);
         getProblems();
         getRegions();
+
+
     }
 }
 
