@@ -21,9 +21,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/',[DashboardController::class,'index'])->name('main');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dash-admin',[DashAdminController::class,'index'])->name('dash-admin.index');
     Route::get('/dash-admin/projects',[DashAdminController::class,'projects'])->name('dash-admin.projects');
+    Route::get('/dash-admin/tasks',[DashAdminController::class,'tasks'])->name('dash-admin.tasks');
 });
 
 

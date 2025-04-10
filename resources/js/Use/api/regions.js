@@ -1,12 +1,9 @@
 import { regions } from "@/Use/data/items";
 
 export function getRegions(){
-    fetch('/api/regions', {
-        method: "GET",
-    })
-    .then(response => response.json())  
+    axios.get('/api/regions')
     .then(res => {
-        regions.value = res;
+        regions.value = res.data;
     })
     .catch(error => console.error("Ошибка при получений регионов", error));
 }

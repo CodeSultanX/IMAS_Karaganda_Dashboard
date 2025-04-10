@@ -1,12 +1,9 @@
 import { problems } from "@/Use/data/items";
 
 export function getProblems(){
-    fetch('/api/problems', {
-        method: "GET",
-    })
-    .then(response => response.json())  
+    axios.get('/api/problems')
     .then(res => {
-        problems.value = res;
+        problems.value = res.data;
     })
     .catch(error => console.error("Ошибка при получений проблемных вопросов:", error));
 }
@@ -25,24 +22,21 @@ export function fillterProblems(data){
         s_date : s_date,
     }).toString();
 
-    fetch(`/api/problems/search?${query}`, {
-        method: "GET",
-    })
-    .then(response => response.json())
+    axios.get(`/api/problems/search?${query}`)
+    
     .then(res => {
-        problems.value = res;
+        problems.value = res.data;
     })
     .catch(error => console.error("Ошибка при получений проблемных вопросов:", error));
 }
 export function deleteProblem(problem){
-    fetch(`/api/problems/${problem}`, {
-        method: "DELETE",
+    axios.delete(`/api/problems/${problem}`, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         },
     })
-    .then(response => response.json())  
+      
     .then(res => {
         getProblems();
     })
@@ -68,36 +62,25 @@ export function createProblem(form,user_id) {
         formData.append("regions[]",region_id);
     });
 
-    fetch('/api/problems', {
-        method: "POST",
+    axios.post('/api/problems',formData, {
         headers: {
             "Accept": "application/json"
         },
-        body: formData,
     })
-        
-    .then(response => response.json())  
     .then(res => {
-        console.log(res);
         form.reset();
         getProblems();
     })
     .catch(error => console.error("Ошибка при создании проблемного вопроса:", error));
 }
 export function updateProblemVisible(id,is_visible) {
-    fetch(`/api/problems/updateVisible/${id}`, {
-        method: "PUT",
+    axios.put(`/api/problems/updateVisible/${id}`,{'is_visible':is_visible}, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         },
-        body: JSON.stringify({
-                'is_visible':is_visible
-            }
-        ),
     })
         
-    .then(response => response.json())  
     .then(res => {
         console.log(res);
     })
@@ -123,15 +106,11 @@ export function udpateProblem(form) {
         formData.append("regions[]",region_id);
     });
 
-    fetch(`/api/problems/${form.id}`, {
-        method: "POST", // Меняем на POST (Laravel сам обработает PUT через _method)
+    axios.post(`/api/problems/${form.id}`,formData ,{
         headers: {
             "Accept": "application/json"
         },
-        body: formData,
     })
-        
-    .then(response => response.json())  
     .then(res => {
         getProblems();
         console.log(res);

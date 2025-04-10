@@ -4,7 +4,7 @@ namespace App\Http\Requests\Problem;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FillterRequest extends FormRequest
+class TaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,11 @@ class FillterRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'f_date' => 'required|date',
-           's_date' => 'required|date',
-           'regions' => 'nullable|string',
-           'levels' => 'nullable|string',
-           'visible' => 'nullable|integer',
+            'id' => 'nullable|integer',
+            'type' => 'required|string',
+            'content' => 'required|string',
+            'status' => 'nullable|string',
+            'user_id' => 'nullable|integer',
         ];
     }
 }

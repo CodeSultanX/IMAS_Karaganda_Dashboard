@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('problem_maps', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('problem_id')->constrained()->onDelete('cascade');
-            $table->foreignId('region_id')->constrained('regions')->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('problem_maps', function (Blueprint $table) {
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('problem_maps');
+        Schema::table('problem_maps', function (Blueprint $table) {
+            // $table->dropForeign(['region_id']);
+        });
     }
 };

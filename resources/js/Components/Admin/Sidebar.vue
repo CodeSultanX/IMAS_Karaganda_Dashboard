@@ -27,6 +27,14 @@
                     </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a :href="route('dash-admin.tasks')" :class="`nav-link ${route().current() == 'dash-admin.tasks' ? 'active' : ''}`" >
+                    <i class="nav-icon fas fa-shopping-bag"></i>
+                    <p>
+                        Пометки/Поручение
+                    </p>
+                    </a>
+                </li>
                 
                 </ul>
             </nav>

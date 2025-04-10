@@ -12,5 +12,8 @@ class DashAdminController{
     public function projects(){
         return Inertia::render('Admin/Project/Index');
     }
+    public function tasks(){
+        return Inertia::render('Admin/Task/Index');
+    }
 
 }

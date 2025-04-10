@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class UserSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $user = [
+            'name' => 'Admin',
+            'role' => 'admin',
+            'email' => 'admin@gmail.ru',
+            'email_verified_at' => now(),
+            'password' =>  Hash::make('12341234'),
+            'remember_token' => Str::random(10),
+        ];
+
+        DB::table('users')->insert($user);
+
+    }
+}

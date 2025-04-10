@@ -163,11 +163,18 @@ class ProblemController extends Controller
            $problemIds = Problem::filter($filter)->pluck('id');
            $data = Problem::getAdminPageProblemsWithIds($problemIds);
            return response()->json(ProblemResource::collection($data),200);
-
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Error : '. $th->getMessage()],500);
         }
        
+    }
+
+
+    public function main()
+    {
+        
+
+
     }
    
 }
