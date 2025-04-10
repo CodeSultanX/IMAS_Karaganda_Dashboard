@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProblemFillter extends Fillter
 {
-    public const KEYS_TO_ARRAY = ['levels', 'regions'];
+    public const KEYS_STRING_TO_ARRAY = ['levels', 'regions'];
 
     protected function levels(array $value): Builder
     {

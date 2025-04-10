@@ -13,6 +13,6 @@ class ProblemSeeder extends Seeder
      */
     public function run(): void
     {
-       Problem::factory()->count(15)->create();
+       Problem::factory()->count(62)->create();
     }
 }
