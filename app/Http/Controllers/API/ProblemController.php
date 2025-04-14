@@ -168,13 +168,6 @@ class ProblemController extends Controller
         }
        
     }
-
-
-    public function main()
-    {
-        
-
-
-    }
+   
    
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\MainController;
 use App\Http\Controllers\API\ProblemController;
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\RegionController;
@@ -23,3 +24,5 @@ Route::put('/problems/updateVisible/{problem}',[ProblemController::class,'update
 Route::get('/problems/search',[ProblemController::class,'search']);
 
 
+
+Route::apiResource('main',MainController::class);

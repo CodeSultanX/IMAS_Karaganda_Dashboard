@@ -10,23 +10,28 @@
           </div>
           <!-- Кнопки справа -->
           <div class="col-sm-12 col-12 col-md-12 col-lg-6 padding-0 calendar-wrappers">
-           
-            <div id="reportrangeLabel" class="calendar-wrapper calendar-1">
-              <svg id="reportrange" width="24" height="24" viewBox="0 0 24 24" style="cursor: pointer;" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_81_35)">
-                  <path d="M17 3H21C21.2652 3 21.5196 3.10536 21.7071 3.29289C21.8946 3.48043 22 3.73478 22 4V20C22 20.2652 21.8946 20.5196 21.7071 20.7071C21.5196 20.8946 21.2652 21 21 21H3C2.73478 21 2.48043 20.8946 2.29289 20.7071C2.10536 20.5196 2 20.2652 2 20V4C2 3.73478 2.10536 3.48043 2.29289 3.29289C2.48043 3.10536 2.73478 3 3 3H7V1H9V3H15V1H17V3ZM20 9V5H17V7H15V5H9V7H7V5H4V9H20ZM20 11H4V19H20V11ZM6 13H11V17H6V13Z" fill="white"></path>
-                </g>
-                <defs>
-                  <clipPath id="clip0_81_35">
-                    <rect width="24" height="24" fill="white"></rect>
-                  </clipPath>
-                </defs>
-              </svg>
-              <span>01.01.2024 - 01.02.2025</span>
+            <div class="calendar-wrapper calendar-1 ">
+                <svg id="reportrange" width="24" height="24" viewBox="0 0 24 24" style="cursor: pointer;" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_81_35)">
+                    <path d="M17 3H21C21.2652 3 21.5196 3.10536 21.7071 3.29289C21.8946 3.48043 22 3.73478 22 4V20C22 20.2652 21.8946 20.5196 21.7071 20.7071C21.5196 20.8946 21.2652 21 21 21H3C2.73478 21 2.48043 20.8946 2.29289 20.7071C2.10536 20.5196 2 20.2652 2 20V4C2 3.73478 2.10536 3.48043 2.29289 3.29289C2.48043 3.10536 2.73478 3 3 3H7V1H9V3H15V1H17V3ZM20 9V5H17V7H15V5H9V7H7V5H4V9H20ZM20 11H4V19H20V11ZM6 13H11V17H6V13Z" fill="white"></path>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_81_35">
+                      <rect width="24" height="24" fill="white"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+                  <date-range-picker
+                          ref="picker"
+                          :opens="'left'"
+                          :dateRange="dateRange"
+                          v-model="dateRange" 
+                          @update:model-value = "onApply"
+              />
             </div>
             <div class="calendar-wrapper calendar-2">
               <span class="calendar-clock">
-                <span id="calendar-hour">11:16 вт.</span>
+                <span id="calendar-hour">{{ now }}</span>
               </span>
             </div>
             <div class="calendar-wrapper calendar-3">
@@ -52,7 +57,72 @@
 </template>
 
 <script>
+
+import DateRangePicker from 'vue3-daterange-picker';
+import { getCategoriesProblems } from '@/Use/api/main';
+import { f_date,s_date } from '@/Use/data/items';
 export default{
     name : 'TopNav',
+    components: {DateRangePicker},
+    data(){
+      return{
+          now : '',
+          dateRange : {
+                startDate: f_date,  // Получаем YYYY-MM-DD
+                endDate: s_date,
+            },
+      }
+    },
+
+    setup(){return{f_date,s_date}},
+
+    methods:{
+      current_time(){
+        const now = new Date();
+        const time = now.toLocaleTimeString('ru',{
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+
+        const day = now.toLocaleDateString('ru',{
+          weekday: "short"
+        })
+
+        this.now = `${time}  ${day}.`
+      },
+     
+      onApply(){
+        const f_date = new Date(this.dateRange.startDate).toISOString().split('T')[0];
+        const s_date = new Date(this.dateRange.endDate).toISOString().split('T')[0];
+        getCategoriesProblems(f_date,s_date)
+      }
+
+      
+    },
+
+    mounted(){
+      this.current_time();
+      setInterval(this.current_time,6000)
+    },
+
+    watch: {
+        f_date: {
+            immediate: true, // чтобы сработало сразу при наличии
+            handler(newVal) {
+                this.dateRange.startDate = newVal;
+            }
+        },
+        s_date: {
+            immediate: true, // чтобы сработало сразу при наличии
+            handler(newVal) {
+              this.dateRange.endDate = newVal;
+            }
+        },
+    }
+
+    
+    
 }
 </script>
+
+

@@ -181,7 +181,7 @@ a:hover{
 
 .calendar-1 #reportrange{
     padding-left: 20px;
-    width: 30%;
+    width: 20%;
 }
 
 .calendar-2{
@@ -849,6 +849,40 @@ path#path328 {
 .list-items li:hover{
     background-color: var(--bg-border-cart);
 }
+
+/* Date Range Picker MAIN PAGE */
+.calendar-wrapper .daterangepicker {
+    background-color: var(--bg-cart-wrapper) !important;
+    border: 1px solid var(--bg-block-colors) !important;
+    border-radius: 12px;
+}
+.calendar-wrapper .daterangepicker .calendar-table td {
+   color: #999;
+} 
+.calendar-wrapper .daterangepicker .calendar-table td.in_range {
+   color: #0000;
+} 
+.calendar-wrapper .daterangepicker .calendar-table td.start-date,.calendar-wrapper .daterangepicker .calendar-table td.end-date{
+   color: #fff ;
+} 
+.calendar-wrapper .daterangepicker .ranges li:hover
+{
+    background-color: var(--bg-block-colors);
+    color: #fff;
+}
+.calendar-wrapper .daterangepicker th.month {
+    color: #000;
+}
+.calendar-wrapper .reportrange-text[data-v-946d18f6] {
+    background: transparent;
+    border: none;
+}
+.calendar-wrapper .daterangepicker .drp-buttons {
+    border-top: 1px solid var(--bg-block-colors)
+}
+
+
+
 
 
 @media (min-width: 1441px) and (max-width: 1919px) {

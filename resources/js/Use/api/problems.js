@@ -7,6 +7,7 @@ export function getProblems(){
     })
     .catch(error => console.error("Ошибка при получений проблемных вопросов:", error));
 }
+
 export function fillterProblems(data){
     const levels = data.value_levels.map(l => l.value).join(',');
     const regions = data.value_regions.map(r => r.id).join(',');

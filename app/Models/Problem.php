@@ -27,6 +27,7 @@ class Problem extends Model
     {
         return self::with(['images', 'results.user', 'regions'])->get();
     }
+   
     public static function getAdminPageProblemsWithIds($ids)
     {
         return self::with(['images', 'results.user', 'regions'])->whereIn('id',$ids)->get();
