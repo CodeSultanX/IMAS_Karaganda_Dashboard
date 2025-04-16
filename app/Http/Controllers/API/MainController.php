@@ -9,15 +9,21 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Fillters\ProblemFillter;
 use App\Http\Resources\Problem\ProblemResource;
+use App\Models\Project;
 
 class MainController extends Controller
 {
     public function index(ProblemFillter $filter):JsonResponse
     {
         try{
-            $problemIds = Problem::filter($filter)->pluck('id');
+            $query = Problem::filter($filter);
+            $problemIds = $query->pluck('id');
+            $projectIds = $query->pluck('project_id');
             $data = Problem::getAdminPageProblemsWithIds($problemIds);
-            return response()->json(ProblemResource::collection($data),200);            
+            $projects_data = Project::whereIn('id',$projectIds)->get();
+            return response()->json([
+               'problems' =>  ProblemResource::collection($data),
+               'projects' => $projects_data],200);            
         }catch(\Throwable $th){
             return response()->json(['error:',$th->getMessage()],500);
         }

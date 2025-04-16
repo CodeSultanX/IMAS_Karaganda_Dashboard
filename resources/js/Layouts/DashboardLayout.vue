@@ -13,6 +13,8 @@
 </template>
 
 <script setup>
+
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { Head } from '@inertiajs/vue3';
 import TopNav from '@/Components/Main/TopNav.vue';
 import Footer from '@/Components/Main/Footer.vue';
@@ -28,13 +30,12 @@ getCategoriesProblems();
 watch(
   () => problems.value.all,
   (newVal) => {
-    if(newVal.list){
+    if(newVal.list.length > 0){
       data.value = newVal.list;
       const dates = Object.values(data.value).map(obj => new Date(obj.created_at));
       f_date.value = new Date(Math.min(...dates)).toISOString().split('T')[0];
       s_date.value = new Date(Math.max(...dates)).toISOString().split('T')[0];
       getLevelsWidthProblemsList('all',f_date.value,s_date.value)
-
     }
   }
 )

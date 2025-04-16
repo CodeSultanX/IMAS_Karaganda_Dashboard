@@ -3,7 +3,7 @@
         <div class="list-left ">
             <h1 class="cart-title">Количество очагов:</h1>
             <ul>
-                <li v-for="(params,level) in leftCategories" :key="level" :class="`block level`">
+                <li v-for="(params,level) in leftCategories" :key="level" :class="['block level',{ active : activeLevel === level}]">
                     <a @click.prevent="getListsProblem(level,f_date,s_date)">
                         <h3 class="outbreaks-title">{{ titleCategory(level,params.total) }} </h3>
                         <span v-if="params.count.summ > 0"> Очагов: {{ params.count.summ }} &nbsp; </span>
@@ -19,7 +19,7 @@
         <div class="list-right">
             <h1 class="cart-title">Проблемные вопросы:</h1>
             <ul>
-                <li v-for="(params,level) in rightCategories" :key="level" :class="`block problem-block `">
+                <li v-for="(params,level) in rightCategories" :key="level" :class="['block problem-block',{ active : activeLevel === level}]">
                     <a @click.prevent="getListsProblem(level,f_date,s_date)" class="d-flex-center">
                         <div class="list-right-count"> {{ params.total }} </div>
                         <div class="problem-title">{{ titleCategory(level,params.total) }}</div>
@@ -46,6 +46,7 @@ export default{
         return {
             leftCategories : {},
             rightCategories : {},
+            activeLevel : 'all',
         }
     },
     setup(){return {f_date,s_date}},
@@ -65,6 +66,7 @@ export default{
         },
 
         getListsProblem(level,f_date,s_date){
+            this.activeLevel = level;
             getLevelsWidthProblemsList(level,f_date,s_date);
         }
             
